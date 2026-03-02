@@ -44,6 +44,10 @@ app.post("/api/chat", async (req, res) => {
       })
     });
 
+    const text = await response.text(); // <- voir le contenu brut
+    console.log("Response status:", response.status, response.statusText);
+    console.log("Response body:", text);
+
     const data = await response.json();
 
     if (!response.ok) {
