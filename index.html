@@ -307,61 +307,86 @@
 </footer>
 
 <script>
-// Chat overlay toggle
+// Sélection des éléments
 const chatBubble = document.getElementById('chatBubble');
 const chatOverlay = document.getElementById('chatOverlay');
 const chatClose = document.getElementById('chatClose');
-const chatSend = document.getElementById('chatSend');
 const chatInput = document.getElementById('chatInput');
+const chatSend = document.getElementById('chatSend');
 const chatbox = document.getElementById('chatbox');
 
+// Ouvrir / fermer le chat
 function openChat() {
-    chatOverlay.classList.add('active');
-    chatOverlay.setAttribute('aria-hidden', 'false');
-    document.body.style.overflow = 'hidden';
-    chatInput.focus();
+  chatOverlay.classList.add('active');
+  chatOverlay.setAttribute('aria-hidden', 'false');
+  document.body.style.overflow = 'hidden';
+  chatInput.focus();
 }
 
 function closeChat() {
-    chatOverlay.classList.remove('active');
-    chatOverlay.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-    chatBubble.focus();
+  chatOverlay.classList.remove('active');
+  chatOverlay.setAttribute('aria-hidden', 'true');
+  document.body.style.overflow = '';
+  chatBubble.focus();
 }
 
 chatBubble.addEventListener('click', openChat);
-chatBubble.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openChat(); });
+chatBubble.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') openChat(); });
 chatClose.addEventListener('click', closeChat);
-chatOverlay.addEventListener('click', (e) => { if (e.target === chatOverlay) closeChat(); });
-document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && chatOverlay.classList.contains('active')) closeChat(); });
+chatOverlay.addEventListener('click', e => { if (e.target === chatOverlay) closeChat(); });
+document.addEventListener('keydown', e => { if (e.key === 'Escape' && chatOverlay.classList.contains('active')) closeChat(); });
 
-// Send message handler (reuses existing /api/chat endpoint)
+// Fonction d’échappement HTML pour éviter les injections
+function escapeHtml(str) {
+  return str.replace(/[&<>"']/g, c => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" }[c]));
+}
+
+// Envoi d’un message
 async function sendMessage() {
-    const message = chatInput.value.trim();
-    if (!message) return;
-    chatbox.innerHTML += `<div class="user"><b>Moi:</b> ${escapeHtml(message)}</div>`;
-    chatInput.value = '';
+  const message = chatInput.value.trim();
+  if (!message) return;
+
+  chatbox.innerHTML += `<div class="user"><b>Moi:</b> ${escapeHtml(message)}</div>`;
+  chatInput.value = '';
+  chatbox.scrollTop = chatbox.scrollHeight;
+
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ message })
+    });
+
+    // Afficher le status code si dev
+    if (!res.ok) {
+      chatbox.innerHTML += `<div class="bot"><b>Bot:</b> Erreur serveur (${res.status})</div>`;
+      chatbox.scrollTop = chatbox.scrollHeight;
+      return;
+    }
+
+    const data = await res.json();
+
+    if (data.reply) {
+      chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${escapeHtml(data.reply)}</div>`;
+    } else if (data.error) {
+      chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${escapeHtml(data.error)}</div>`;
+    } else {
+      chatbox.innerHTML += `<div class="bot"><b>Bot:</b> Pas de réponse du serveur</div>`;
+    }
+
     chatbox.scrollTop = chatbox.scrollHeight;
 
-    try {
-        const res = await fetch('/api/chat', {
-            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message })
-        });
-        const data = await res.json();
-        const reply = data.reply || data.error || 'Pas de réponse';
-        chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${escapeHtml(String(reply))}</div>`;
-        chatbox.scrollTop = chatbox.scrollHeight;
-    } catch (err) {
-        chatbox.innerHTML += `<div class="bot"><b>Bot:</b> Erreur de connexion</div>`;
-    }
+  } catch (err) {
+    chatbox.innerHTML += `<div class="bot"><b>Bot:</b> Erreur de connexion</div>`;
+    chatbox.scrollTop = chatbox.scrollHeight;
+    if (process.env.NODE_ENV !== "production") console.error("Erreur fetch front:", err);
+  }
 }
 
+// Envoyer avec le bouton ou Enter
 chatSend.addEventListener('click', sendMessage);
-chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+chatInput.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
 
-function escapeHtml(str) {
-    return str.replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]);
-}
 
 // Reservation form logic
 const reserveButtons = document.querySelectorAll('.reserve-btn');
