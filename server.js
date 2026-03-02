@@ -55,6 +55,7 @@ app.post("/api/chat", async (req, res) => {
     res.json({ reply });
 
   } catch (err) {
+    console.error(err);
     res.status(500).json({ error: err.message });
   }
 });
