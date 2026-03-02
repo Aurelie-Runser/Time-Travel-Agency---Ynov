@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Travel Agency - Agence de voyage dans le temps</title>
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body { font-family: Arial, sans-serif; margin: 0; padding: 0; }
+        header.hero h1 { font-family: 'Dancing Script', cursive; font-size: 3rem; margin: 0 0 10px; position: relative; z-index: 1; }
+        header.hero p { font-family: 'Poppins', sans-serif; font-size: 1.5rem; margin: 0 0 20px; position: relative; z-index: 1; max-width: 600px; }
+        h2, h3 { font-family: 'Dancing Script', sans-serif; font-weight: 600; font-size: 1.8rem; }
+        h2 { font-size: 2.5rem; text-align: center; margin: 20px 0 10px; }
+        section.destinations .intro { text-align: center; font-size: 1.1rem; color: #666; margin-bottom: 40px; max-width: 700px; margin-left: auto; margin-right: auto; }
+        header.hero { position: relative; overflow: hidden; color: white; padding: 60px 20px; text-align: left; height: 100svh; display: flex; flex-direction: column; justify-content: center; }
+        header.hero::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0)); z-index: 0; }
+        header.hero p { font-size: 1.5rem; margin: 0 0 20px; position: relative; z-index: 1; max-width: 600px; }
+        header.hero a.cta { display: inline-block; width: fit-content; padding: 12px 24px; background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; text-decoration: none; border-radius: 24px; font-weight: 600; position: relative; z-index: 1; transition: transform 0.2s ease; }
+        header.hero a.cta:hover { transform: scale(1.05); }
+        .hero-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: -1; }
+        section.destinations { padding: 60px 20px; background: #f9f9f9; }
+        .cards { display: flex; flex-direction: column; gap: 30px; justify-content: center; align-items: center; }
+        .card { position: relative; overflow: hidden; width: 90%; max-width: 1200px; height: 500px; border: 2px solid #ddd; border-radius: 12px; display: flex; color: white; transition: all 0.4s ease; }
+        .card:hover { width: 100%; max-width: 1500px; height: 600px; }
+        .card-video { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; opacity: 0; transition: opacity 0.4s ease; z-index: 1; }
+        .card:hover .card-video { opacity: 1; }
+        .card img { position: absolute; top: 0; left: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+        .card::before { content: ""; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: linear-gradient(to right, rgba(0,0,0,0.7), rgba(0,0,0,0)); z-index: 2; }
+        .card .content { padding: 40px; position: relative; z-index: 2; max-width: 600px; display: flex; flex-direction: column; justify-content: center; }
+        .card:nth-child(even) { flex-direction: row-reverse; }
+        .card:nth-child(even) .content { background: linear-gradient(to left, rgba(0,0,0,0.7), rgba(0,0,0,0)); }
+        .card:nth-child(even)::before { display: none; }
+        .card h3 { margin: 0 0 15px; }
+        .card p { margin: 0; font-size: 1rem; }
+        .card-info { display: flex; justify-content: space-between; margin-top: 20px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.3); gap: 20px; }
+        .card-duration, .card-price { font-size: 0.9rem; font-family: 'Poppins', sans-serif; }
+        .card-duration span, .card-price span { display: block; font-weight: bold; font-size: 1.1rem; margin-top: 5px; }
+        section.faq { padding: 60px 20px; background: white; }
+        .faq-container { max-width: 800px; margin: 0 auto; }
+        .faq-item { margin-bottom: 20px; border-bottom: 1px solid #eee; padding-bottom: 20px; }
+        .faq-item p { font-size: 0.95rem; color: #666; margin: 0; line-height: 1.6; }
+        section.contact { padding: 60px 20px; background: #f9f9f9; }
+        .contact-container { max-width: 800px; margin: 0 auto; text-align: center; }
+        .contact-info { margin: 30px 0; }
+        .contact-info p { font-size: 1rem; color: #333; margin: 15px 0; font-family: 'Poppins', sans-serif; }
+        .contact-info a { color: #348aa7; text-decoration: none; font-weight: 600; transition: color 0.2s ease; }
+        .contact-info a:hover { color: #fed6e3; }
+
+        /* Chat bubble (fixed) */
+        .chat-bubble {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+            background: linear-gradient(135deg, #a8edea, #fed6e3);
+            z-index: 1200;
+            transition: transform 0.18s ease, box-shadow 0.18s ease;
+        }
+        .chat-bubble:hover { transform: scale(1.1); }
+
+        /* Overlay */
+        .chat-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            z-index: 1100;
+            transition: opacity 0.2s ease;
+        }
+        .chat-overlay.active { display: flex; }
+
+        /* Chat panel */
+        .chat-panel {
+            width: 380px;
+            max-width: 95vw;
+            height: 80vh;
+            background: #ffffff;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            transition: transform 0.22s ease, opacity 0.2s ease;
+        }
+
+        .chat-header {
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: linear-gradient(90deg, #f0f7fa, #fff0f6);
+            border-bottom: 1px solid #eee;
+        }
+        .chat-header strong { font-family: 'Poppins', sans-serif; }
+        .chat-header button { background: transparent; border: 0; font-size: 18px; cursor: pointer; }
+
+        .chat-panel-body {
+            padding: 16px;
+            overflow-y: auto;
+            flex: 1 1 auto;
+            background: linear-gradient(180deg, #ffffff, #fbfbfb);
+        }
+
+        .chat-input {
+            padding: 12px;
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            border-top: 1px solid #eee;
+            background: #fff;
+        }
+        .chat-input input { flex: 1; padding: 10px 12px; border-radius: 8px; border: 1px solid #ddd; font-size: 14px; }
+        .chat-input button { padding: 10px 14px; border-radius: 8px; border: 0; cursor: pointer; background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; font-weight: 600; }
+
+        /* Messages */
+        .chat-panel-body .user { text-align: right; color: #102a43; background: rgba(168,237,234,0.15); display: block; padding: 8px 12px; border-radius: 12px; margin: 8px 0 8px auto; width: fit-content; }
+        .chat-panel-body .bot { text-align: left; color: #102a43; background: rgba(254,214,227,0.15); display: block; padding: 8px 12px; border-radius: 12px; margin: 8px 0; width: fit-content; }
+        .chat-panel-body :is(.user, .bot) b { display: block }
+        /* Reservation overlay */
+        .reserve-overlay {
+            position: fixed;
+            inset: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            background: rgba(0,0,0,0.45);
+            z-index: 1300;
+        }
+        .reserve-overlay.active { display: flex; }
+        .reserve-panel {
+            background: #fff;
+            padding: 24px;
+            border-radius: 12px;
+            width: 320px;
+            max-width: 90vw;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+            font-family: 'Poppins', sans-serif;
+        }
+        .reserve-panel h3 { margin-top: 0; font-size: 1.4rem; }
+        .reserve-panel label { display: block; margin: 12px 0; font-size: 0.95rem; }
+        .reserve-panel input, .reserve-panel select { width: 100%; padding: 8px; margin-top: 4px; border: 1px solid #ccc; border-radius: 6px; }
+        .reserve-actions { margin-top: 16px; display: flex; gap: 8px; justify-content: flex-end; }
+        .reserve-actions button { padding: 8px 14px; border: none; border-radius: 24px; cursor: pointer; font-weight: bold; color: #333; transition: transform 0.2s ease; }
+        .reserve-btn { display: inline-block; margin-top: 20px; padding: 10px 20px; background: linear-gradient(135deg, #a8edea, #fed6e3); color: #333; text-decoration: none; border-radius: 24px; border:none; font-weight: 600; transition: transform 0.2s ease; cursor: pointer; }
+        .reserve-btn:hover { transform: scale(1.05); }
+        .reserve-actions button[type="submit"] { background: linear-gradient(135deg, #a8edea, #fed6e3); }
+        .reserve-actions button[type="submit"]:hover { transform: scale(1.05); }
+        .reserve-actions #reserveCancel { background: linear-gradient(135deg, #ddd, #bbb); }
+        .reserve-actions #reserveCancel:hover { transform: scale(1.05); }
+        /* Footer */
+        footer { background: #333; color: #fff; padding: 20px; text-align: center; font-size: 0.9rem; }
+
+    </style>
+</head>
+<body>
+
+<header class="hero">
+    <video class="hero-video" src="./medias/hero.mp4" autoplay muted loop playsinline></video>
+    <h1>Time Travel Agency</h1>
+    <p>Partez à la découverte d'époques révolues grâce à notre agence de voyage dans le temps.</p>
+    <a href="#destinations" class="cta">Voir nos destinations</a>
+</header>
+
+<section id="destinations" class="destinations">
+    <h2>Nos destinations</h2>
+    <p class="intro">Découvrez trois périodes extraordinaires à travers nos meilleurs voyages immersifs. Choisissez votre époque préférée et lancez-vous dans l'aventure.</p>
+    
+    <div class="cards">
+        <div class="card">
+            <img src="./medias/paris.png" alt="Paris 1889" loading="lazy">
+            <video class="card-video" src="./medias/paris.mp4" autoplay muted loop playsinline></video>
+            <div class="content">
+                <h3>Paris 1889</h3>
+                <p>Plongez dans l'effervescence de l'Exposition Universelle avec ses monuments iconiques et ses attractions futuristes. Découvrez la Belle Époque, l'âge d'or de la culture parisienne, où artistes, musiciens et écrivains révolutionnaient le monde.</p>
+                <div class="card-info">
+                    <div class="card-duration">Durée: <span>3-5 jours</span></div>
+                    <div class="card-price">Prix: <span>Dès 2 999€ par personne</span></div>
+                </div>
+                <button class="reserve-btn" data-dest="Paris 1889">Je réserve cette destination</button>
+            </div>
+        </div>
+        <div class="card">
+            <img src="./medias/cretace.png" alt="Crétacé -65M" loading="lazy">
+            <video class="card-video" src="./medias/cretace.mp4" autoplay muted loop playsinline></video>
+            <div class="content">
+                <h3>Crétacé -65M années</h3>
+                <p>Témoignez de l'extinction des dinosaures et explorez un monde préhistorique peuplé de créatures majestueuses. Vivez les derniers moments de cette ère fascinante, entre paysages primitifs et créatures légendaires qui ont dominé la Terre.</p>
+                <div class="card-info">
+                    <div class="card-duration">Durée: <span>5-10 jours</span></div>
+                    <div class="card-price">Prix: <span>Dès 4 999€ par personne</span></div>
+                </div>
+                <button class="reserve-btn" data-dest="Crétacé -65M années">Je réserve cette destination</button>
+            </div>
+        </div>
+        <div class="card">
+            <img src="./medias/florence.png" alt="Renaissance Florence 1504" loading="lazy">
+            <video class="card-video" src="./medias/florence.mp4" autoplay muted loop playsinline></video>
+            <div class="content">
+                <h3>Renaissance Florence 1504</h3>
+                <p>Immergez-vous dans un âge d'or artistique où les chefs-d'œuvre se créaient à chaque coin de rue. Explorez les ateliers des maîtres, admirez les fresques spectaculaires et respirez l'air de l'une des plus belles périodes créatives de l'humanité.</p>
+                <div class="card-info">
+                    <div class="card-duration">Durée: <span>4-7 jours</span></div>
+                    <div class="card-price">Prix: <span>Dès 3 499€ par personne</span></div>
+                </div>
+                <button class="reserve-btn" data-dest="Renaissance Florence 1504">Je réserve cette destination</button>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section id="faq" class="faq">
+    <h2>Questions Fréquentes</h2>
+    <div class="faq-container">
+        <div class="faq-item">
+            <h3>Est-ce que les voyages dans le temps sont sûrs ?</h3>
+            <p>Absolument ! Notre technologie de voyage temporel a été testée et affinée pendant des années. Tous nos voyageurs sont équipés de protocoles de sécurité strictes et nos guides experts vous accompagnent à chaque étape pour garantir votre sérénité et votre protection.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Combien de temps dure une expérience de voyage temporel ?</h3>
+            <p>La durée des voyages varie selon la destination. Nos escapades classiques durent entre 3 et 7 jours d'expérience immersive pour réellement profiter de chaque voyages.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Quels équipements dois-je apporter ?</h3>
+            <p>Aucun équipement spécial n'est requis ! Nous fournissons tous les accessoires et vêtements appropriés à l'époque visitée. Nous vous recommandons simplement de porter des chaussures confortables et de vous préparer mentalement à une aventure extraordinaire.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Y a-t-il des restrictions ou des règles à respecter ?</h3>
+            <p>Oui, quelques règles essentielles assurent la stabilité du continuum spatio-temporel. Nous vous interdisons de modifier des événements historiques ou futurs, de divulguer des informations futures, et de créer d'artefacts anachroniques. Notre équipe vous briefera complètement avant chaque départ.</p>
+        </div>
+        <div class="faq-item">
+            <h3>Peut-on interagir avec les personnes et événements du passé/futur ?</h3>
+            <p>Vous pouvez observer et interagir dans un cadre établi. Pendant votre voyage, vous serez intégré comme un habitant de l'époque, vous permettant de vivre authentiquement le moment. Cependant, les actions qui pourrait affecter l'histoire sont strictement encadrées par nos protocoles temporels.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Contact section -->
+<section id="contact" class="contact">
+    <h2>Nous Contacter</h2>
+    <div class="contact-container">
+        <div class="contact-info">
+            <p><strong>Email :</strong> <a href="#">contact@timetravelagency.fr</a></p>
+            <p><strong>Téléphone :</strong> <a href="#">+33 3 XX XX XX XX</a></p>
+        </div>
+    </div>
+</section>
+
+<!-- Chat bubble (fixed) and overlay panel -->
+<div class="chat-bubble" id="chatBubble" aria-label="Ouvrir le chat" role="button" tabindex="0">💬</div>
+
+<div class="chat-overlay" id="chatOverlay" aria-hidden="true">
+    <div class="chat-panel" role="dialog" aria-modal="true" aria-label="Chat IA">
+        <div class="chat-header">
+            <strong>Assistance Time Travel Agency</strong>
+            <button id="chatClose" aria-label="Fermer">✕</button>
+        </div>
+        <div id="chatbox" class="chat-panel-body" aria-live="polite"></div>
+        <div class="chat-input">
+            <input type="text" id="chatInput" placeholder="Ma question est..." autocomplete="off" />
+            <button id="chatSend">Envoyer</button>
+        </div>
+    </div>
+</div>
+
+<!-- Reservation overlay -->
+<div class="reserve-overlay" id="reserveOverlay" aria-hidden="true">
+  <div class="reserve-panel">
+    <h3 id="reserveTitle">Destination</h3>
+    <form id="reserveForm">
+      <label>Nom du réservant:<br><input type="text" id="resName" required></label><br>
+      <label>Date de départ:<br><input type="date" id="resDate" required></label><br>
+      <label>Nombre de Personnes:<br><select id="resPeople">
+        <option value="1">1</option>
+        <option value="2">2</option>
+        <option value="3">3</option>
+        <option value="4">4</option>
+        <option value="5">5</option>
+        <option value="6">6</option>
+        <option value="7">7</option>
+        <option value="8">8</option>
+        <option value="9">9</option>
+        <option value="10">10</option>
+      </select></label>
+      <div class="reserve-actions">
+        <button type="submit">Réserver</button>
+        <button type="button" id="reserveCancel">Annuler</button>
+      </div>
+      <div id="reserveMessage" style="display:none; margin-top:20px; font-weight:bold; text-align:center;">Réservation enregistrée, merci de votre confiance.</div>
+    </form>
+  </div>
+</div>
+
+<footer>
+    <p>&copy; Propriété de Time Travel Agency. Tous droits réservés.</p>
+</footer>
+
+<script>
+// Chat overlay toggle
+const chatBubble = document.getElementById('chatBubble');
+const chatOverlay = document.getElementById('chatOverlay');
+const chatClose = document.getElementById('chatClose');
+const chatSend = document.getElementById('chatSend');
+const chatInput = document.getElementById('chatInput');
+const chatbox = document.getElementById('chatbox');
+
+function openChat() {
+    chatOverlay.classList.add('active');
+    chatOverlay.setAttribute('aria-hidden', 'false');
+    document.body.style.overflow = 'hidden';
+    chatInput.focus();
+}
+
+function closeChat() {
+    chatOverlay.classList.remove('active');
+    chatOverlay.setAttribute('aria-hidden', 'true');
+    document.body.style.overflow = '';
+    chatBubble.focus();
+}
+
+chatBubble.addEventListener('click', openChat);
+chatBubble.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') openChat(); });
+chatClose.addEventListener('click', closeChat);
+chatOverlay.addEventListener('click', (e) => { if (e.target === chatOverlay) closeChat(); });
+document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && chatOverlay.classList.contains('active')) closeChat(); });
+
+// Send message handler (reuses existing /api/chat endpoint)
+async function sendMessage() {
+    const message = chatInput.value.trim();
+    if (!message) return;
+    chatbox.innerHTML += `<div class="user"><b>Moi:</b> ${escapeHtml(message)}</div>`;
+    chatInput.value = '';
+    chatbox.scrollTop = chatbox.scrollHeight;
+
+    try {
+        const res = await fetch('/api/chat', {
+            method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ message })
+        });
+        const data = await res.json();
+        const reply = data.reply || data.error || 'Pas de réponse';
+        chatbox.innerHTML += `<div class="bot"><b>Bot:</b> ${escapeHtml(String(reply))}</div>`;
+        chatbox.scrollTop = chatbox.scrollHeight;
+    } catch (err) {
+        chatbox.innerHTML += `<div class="bot"><b>Bot:</b> Erreur de connexion</div>`;
+    }
+}
+
+chatSend.addEventListener('click', sendMessage);
+chatInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') sendMessage(); });
+
+function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, (c) => ({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;" })[c]);
+}
+
+// Reservation form logic
+const reserveButtons = document.querySelectorAll('.reserve-btn');
+const reserveOverlay = document.getElementById('reserveOverlay');
+const reserveTitle = document.getElementById('reserveTitle');
+const reserveForm = document.getElementById('reserveForm');
+const reserveCancel = document.getElementById('reserveCancel');
+const resDateInput = document.getElementById('resDate');
+
+// prevent past dates
+const today = new Date().toISOString().split('T')[0];
+resDateInput.setAttribute('min', today);
+
+reserveButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        const dest = btn.getAttribute('data-dest');
+        reserveTitle.textContent = `Destination : ${dest}`;
+        reserveOverlay.classList.add('active');
+        document.body.style.overflow = 'hidden';
+    });
+});
+
+function closeReserve() {
+    reserveOverlay.classList.remove('active');
+    document.body.style.overflow = '';
+}
+reserveCancel.addEventListener('click', closeReserve);
+reserveOverlay.addEventListener('click', (e) => { if (e.target === reserveOverlay) closeReserve(); });
+
+reserveForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    // show confirmation message inside overlay
+    const msgDiv = document.getElementById('reserveMessage');
+    msgDiv.textContent = 'Réservation enregistrée, merci de votre confiance';
+    msgDiv.style.display = 'block';
+    // hide only the form controls (labels/input/select/button)
+    reserveForm.querySelectorAll('label, input, select, button').forEach(el => el.style.display = 'none');
+    // close after a short delay
+    setTimeout(() => {
+        closeReserve();
+        // reset form for next time
+        reserveForm.reset();
+        reserveForm.querySelectorAll('label, input, select, button').forEach(el => el.style.display='');
+        msgDiv.style.display='none';
+    }, 2000);
+});
+</script>
+
+</body>
+</html>

@@ -1,0 +1,69 @@
+Nom du site : Time Travel Agency
+Description : Agence spécialisée dans les voyages dans le temps permettant de découvrir des époques révolues grâce à une technologie sécurisée.
+
+====================
+DESTINATIONS DISPONIBLES
+====================
+
+1) Paris 1889
+Description :
+Plongez dans l'effervescence de l'Exposition Universelle avec ses monuments iconiques et ses attractions futuristes. Découvrez la Belle Époque, l'âge d'or de la culture parisienne, où artistes, musiciens et écrivains révolutionnaient le monde.
+
+Durée : 3 à 5 jours
+Prix : Dès 2 999€ par personne
+
+---
+
+2) Crétacé -65 millions d'années
+Description :
+Témoignez de l'extinction des dinosaures et explorez un monde préhistorique peuplé de créatures majestueuses. Vivez les derniers moments de cette ère fascinante, entre paysages primitifs et créatures légendaires qui ont dominé la Terre.
+
+Durée : 5 à 10 jours
+Prix : Dès 4 999€ par personne
+
+---
+
+3) Renaissance Florence 1504
+Description :
+Immergez-vous dans un âge d'or artistique où les chefs-d'œuvre se créaient à chaque coin de rue. Explorez les ateliers des maîtres, admirez les fresques spectaculaires et respirez l'air de l'une des plus belles périodes créatives de l'humanité.
+
+Durée : 4 à 7 jours
+Prix : Dès 3 499€ par personne
+
+====================
+INFORMATIONS GÉNÉRALES
+====================
+
+Sécurité :
+La technologie de voyage temporel est testée et sécurisée.
+Chaque voyageur est accompagné par des guides experts.
+Des protocoles stricts garantissent la protection des voyageurs.
+
+Durée moyenne :
+Les escapades classiques durent entre 3 et 7 jours.
+
+Équipements :
+Aucun équipement spécial requis.
+L'agence fournit vêtements et accessoires adaptés à l'époque.
+Recommandation : porter des chaussures confortables.
+
+Règles importantes :
+- Interdiction de modifier des événements historiques.
+- Interdiction de divulguer des informations futures.
+- Interdiction de créer des artefacts anachroniques.
+Un briefing complet est effectué avant chaque départ.
+
+Interactions :
+Les voyageurs peuvent observer et interagir dans un cadre encadré.
+Ils sont intégrés comme habitants de l'époque.
+Toute action pouvant modifier l'histoire est strictement contrôlée.
+
+====================
+RÈGLE POUR LE CHATBOT
+====================
+
+Tu dois répondre UNIQUEMENT avec les informations présentes dans ce document.
+Si la réponse n'est pas dans ce document, répondre exactement :
+"L'information n'est pas renseignée sur le site, vous pouvez contacter Time Travel Agency pour plus d'information. Email : contact@timetravelagency.fr. Téléphone : +33 3 XX XX XX XX"
+Ne jamais inventer d'information.
+Ne jamais compléter avec des connaissances externes.
