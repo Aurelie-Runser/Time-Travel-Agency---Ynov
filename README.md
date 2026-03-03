@@ -2,6 +2,8 @@
 
 Landing Page pour une agence de voyage temporel fictive, créée avec IA générative.
 
+Projet en ligne : https://time-travel-agency-aurelie-runser.onrender.com/
+
 ## 🛠️ Stack Technique
 - HTML 5 / CSS 3 / JavaScript
 - Node.js / Mistral AI API
