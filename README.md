@@ -7,6 +7,9 @@ Landing Page pour une agence de voyage temporel fictive, créée avec IA génér
 - Node.js / Mistral AI API
 - Hébergement : Render
 
+> [!IMPORTANT]
+> Utilisant la version gratuite de Render, le site met environ 1 minute à démarrer la 1ère fois qu'il est chargé.
+
 ## ✨ Features
 - Landing page avec
     - Galerie de 3 destinations temporelles
